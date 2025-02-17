@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "seeloewen_itemdumper",
+  "version": "${version}",
+  "name": "Seeloewen ItemDumper",
+  "description": "Dumps a list of all registered item ids",
+  "authors": [],
+  "contact": {},
+  "license": "GPL-3.0",
+  "icon": "assets/seeloewen_itemdumper/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "me.seeloewen.seeloewen_itemdumper.client.Seeloewen_itemdumperClient"
+    ],
+    "main": [
+      "me.seeloewen.seeloewen_itemdumper.Seeloewen_itemdumper"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
