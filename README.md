@@ -1,6 +1,6 @@
 # Seeloewen ItemDumper
 
-This simple mod is used to dump a list of all registered items of the current instance to a file. These ids can be used for development purposes or similar. The main reason why this project was created is the use for the [Random Item Giver Datapack](https://www.planetminecraft.com/data-pack/random-item-giver-datapack-1-0-0-minecraft-1-16-2/). Using this mod, you can generate a list of items to include in the datapack.
+This simple Minecraft mod is used to dump a list of all registered items of the current instance to a file. These ids can be used for development purposes or similar. The main reason why this project was created is the use for the [Random Item Giver Datapack](https://www.planetminecraft.com/data-pack/random-item-giver-datapack-1-0-0-minecraft-1-16-2/). Using this mod, you can generate a list of items to include in the datapack.
 
 The items are currently only written into a new file on every startup of your game. These files are located in the "seeloewen\_itemdumper" folder in your .minecraft directory. The file consists of entries in the format **ModId:ItemId.**
 
