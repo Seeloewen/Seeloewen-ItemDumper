@@ -1,21 +1,13 @@
 package me.seeloewen.seeloewen_itemdumper;
 
 import com.mojang.logging.LogUtils;
-import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.fml.loading.FMLPaths;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -28,16 +20,28 @@ import java.util.*;
 public class Seeloewen_itemdumper
 {
     public static final String MODID = "seeloewen_itemdumper";
-    public static final String VERSION = "1.0.0-Beta1";
+    private static final Logger LOGGER = LogUtils.getLogger();
     public static String fileName;
     public static String modDirectory;
     private static final Logger logger = LogUtils.getLogger();
     public static ArrayList<String> itemIds = new ArrayList<String>();
 
-    public Seeloewen_itemdumper(FMLJavaModLoadingContext context)
+    public Seeloewen_itemdumper(IEventBus modEventBus, ModContainer modContainer)
     {
-        IEventBus modEventBus = context.getModEventBus();
-        MinecraftForge.EVENT_BUS.register(this);
+        modEventBus.addListener(this::onClientSetup);
+    }
+
+    public void onClientSetup(FMLLoadCompleteEvent event)
+    {
+        logger.info("Loaded Seeloewen ItemDumper + VERSION");
+
+        //Create the directory for the mod in the .minecraft folder of the instance (if it doesn't exist already)
+        File directory = new File(FMLPaths.GAMEDIR.get().toString(), "seeloewen_itemdumper");
+        directory.mkdir();
+        modDirectory = FMLPaths.GAMEDIR.get() + "\\seeloewen_itemdumper";
+
+        //Dump the items to a file
+        DumpItems();
     }
 
     public static void DumpItems()
@@ -65,8 +69,8 @@ public class Seeloewen_itemdumper
         }
         catch (IOException e)
         {
-            logger.info("[Seeloewen ItemDumper] An error occurred while dumping the items.");
-            e.printStackTrace();
+            logger.info("[Seeloewen ItemDumper] An error occurred while dumping the items:");
+            logger.error(e.toString());
         }
     }
 
@@ -80,42 +84,21 @@ public class Seeloewen_itemdumper
         }
         catch (IOException e)
         {
-            logger.info("An error occurred while trying to create the dump file.");
-            e.printStackTrace();
+            logger.info("[Seeloewen ItemDumper] An error occurred while trying to create the dump file:");
+            logger.error(e.toString());
         }
     }
 
     public static void GetItemIds()
     {
         //Go through the item registry and get the keys
-        for (Item item : ForgeRegistries.ITEMS.getValues())
+        for (ResourceLocation id : BuiltInRegistries.ITEM.keySet())
         {
-            ResourceLocation id = ForgeRegistries.ITEMS.getKey(item);
-
             //Only add valid items (filter ids that contain a dot or slash)
             if(id != null && !id.toString().contains(".") && !id.toString().contains("/"))
             {
                 itemIds.add(id.toString());
             }
-        }
-    }
-
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents
-    {
-
-        @SubscribeEvent
-        public static void onClientSetup(FMLLoadCompleteEvent event)
-        {
-            logger.info("Loaded Seeloewen ItemDumper + VERSION");
-
-            //Create the directory for the mod in the .minecraft folder of the instance (if it doesn't exist already)
-            File directory = new File(FMLPaths.GAMEDIR.get().toString(), "seeloewen_itemdumper");
-            directory.mkdir();
-            modDirectory = FMLPaths.GAMEDIR.get() + "\\seeloewen_itemdumper";
-
-            //Dump the items to a file
-            DumpItems();
         }
     }
 }
