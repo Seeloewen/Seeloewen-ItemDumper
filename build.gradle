@@ -80,6 +80,11 @@ jar {
     }
 }
 
+remapJar {
+    archiveBaseName = archives_base_name
+    archiveClassifier = "fabric-" + minecraft_version
+}
+
 // configure the maven publication
 publishing {
     publications {
