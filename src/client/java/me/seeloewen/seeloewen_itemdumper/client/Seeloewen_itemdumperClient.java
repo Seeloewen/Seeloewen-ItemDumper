@@ -2,9 +2,9 @@ package me.seeloewen.seeloewen_itemdumper.client;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,9 +87,9 @@ public class Seeloewen_itemdumperClient implements ClientModInitializer
     {
         //Go through the item registry and get the keys
 
-        for (Item item : Registries.ITEM)
+        for (Item item : BuiltInRegistries.ITEM)
         {
-            Identifier id = Registries.ITEM.getId(item);
+            Identifier id = BuiltInRegistries.ITEM.getKey(item);
 
             //Only add valid items (filter ids that contain a dot or slash)
             if (!id.toString().contains(".") && !id.toString().contains("/"))
